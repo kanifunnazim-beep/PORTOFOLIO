@@ -21,3 +21,85 @@ let toastTimer;function toast(text){$('#toast').textContent=text;$('#toast').cla
 $('#copy-email').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('zzidankn324@gmail.com');toast('Alamat email berhasil disalin.');}catch{toast('Email: zzidankn324@gmail.com — pilih dan salin secara manual.');}});
 $('#year').textContent=new Date().getFullYear();
 if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){$$('nav a').forEach(a=>{const active=a.hash===`#${entry.target.id}`;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}}},{rootMargin:'-15% 0px -65% 0px'});$$('main section[id]').forEach(section=>observer.observe(section));}
+
+// Scroll reveals: visible by default, with native animation and no dependencies.
+(() => {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const targets = new Map();
+  const add = (selector, direction = 'up', stagger = false) => {
+    $$(selector).forEach((element, index) => targets.set(element, {
+      direction: direction === 'alternate' ? (index % 2 ? 'right' : 'left') : direction,
+      delay: stagger ? (index % 3) * 100 : 0
+    }));
+  };
+  add('.hero-copy', 'left');
+  add('.portrait-frame', 'right');
+  add('.about > div', 'alternate');
+  add('.section-heading', 'left');
+  add('.project', 'alternate', true);
+  add('.experience-grid > .photo-button', 'left');
+  add('.work-list article', 'right', true);
+  add('.field-gallery > button, .education-grid > *', 'up', true);
+  add('.contact .wrap > h2, .contact .wrap > p, .contact .actions, .contact-details', 'up');
+  const running = new Map();
+  const entered = new Set();
+  if ('IntersectionObserver' in window && Element.prototype.animate) {
+    const reveal = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const element = entry.target;
+        if (entry.isIntersecting && !entered.has(element)) {
+          entered.add(element);
+          if (reducedMotion.matches || element.contains(document.activeElement)) continue;
+          const { direction, delay } = targets.get(element);
+          const distance = window.innerWidth <= 700 ? 24 : 64;
+          const x = direction === 'left' ? -distance : direction === 'right' ? distance : 0;
+          const y = direction === 'up' ? 36 : 0;
+          running.get(element)?.cancel();
+          const animation = element.animate([
+            { opacity: 0, transform: `translate3d(${x}px, ${y}px, 0)` },
+            { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+          ], { duration: 850, delay, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+          running.set(element, animation);
+          animation.onfinish = () => running.delete(element);
+        } else if (!entry.isIntersecting) {
+          // Replay only after the whole element has left the viewport.
+          const box = element.getBoundingClientRect();
+          if (box.bottom <= 0 || box.top >= window.innerHeight) {
+            entered.delete(element);
+            running.get(element)?.cancel();
+            running.delete(element);
+          }
+        }
+      }
+    }, { threshold: 0 });
+    targets.forEach((_, element) => reveal.observe(element));
+  }
+  document.addEventListener('focusin', event => {
+    running.forEach((animation, element) => {
+      if (element.contains(event.target)) { animation.cancel(); running.delete(element); }
+    });
+  });
+  reducedMotion.addEventListener('change', () => {
+    running.forEach(animation => animation.cancel());
+    running.clear();
+  });
+  const progress = document.createElement('div');
+  progress.className = 'scroll-progress';
+  progress.setAttribute('aria-hidden', 'true');
+  document.body.append(progress);
+  let scheduled = false;
+  const updateProgress = () => {
+    const maximum = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = maximum > 0 ? Math.min(1, Math.max(0, window.scrollY / maximum)) : 0;
+    progress.style.transform = `scaleX(${ratio})`;
+    scheduled = false;
+  };
+  const schedule = () => {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(updateProgress); }
+  };
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  window.addEventListener('load', schedule);
+  if ('ResizeObserver' in window) new ResizeObserver(schedule).observe(document.body);
+  updateProgress();
+})();

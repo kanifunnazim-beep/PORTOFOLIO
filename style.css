@@ -2,3 +2,10 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
 .arrow-icon{width:1em;height:1em;vertical-align:-.1em;display:inline-block;flex-shrink:0}
+
+/* Keep horizontal reveals inside the page without affecting the sticky header. */
+main{overflow-x:clip}
+.scroll-progress{position:fixed;inset:0 0 auto;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left center;z-index:20;pointer-events:none}
+.project-cover .circle-arrow{transition:transform .3s ease}
+.project-cover:hover .circle-arrow{transform:rotate(45deg)}
+@media(prefers-reduced-motion:reduce){.project-cover:hover .circle-arrow{transform:none}}

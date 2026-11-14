@@ -25,7 +25,7 @@ Panduan resmi: https://docs.github.com/en/pages/getting-started-with-github-page
 - `index.html`: profil, pengalaman, karya, pendidikan, sertifikasi, kontak.
 - `style.css`: desain responsif, mode gelap/terang, dan tampilan dialog.
 - `script.js`: filter karya, detail proyek, galeri foto, tema, menu mobile, dan salin email.
-- `assets/`: foto dan dokumen asli dari PPT, favicon, serta PPT untuk tombol unduh.
+- `assets/`: foto dan dokumen asli dari PPT, favicon, serta CV PDF untuk tombol Download CV.
 - `.nojekyll`: menghindari pemrosesan Jekyll.
 
 ## Mengedit konten
@@ -35,14 +35,18 @@ Panduan resmi: https://docs.github.com/en/pages/getting-started-with-github-page
 - Ubah warna melalui variabel di awal style.css.
 - Ganti foto di assets dengan nama yang sama atau ubah path pada HTML/JavaScript. Gunakan path relatif agar berfungsi pada subfolder repository GitHub Pages.
 - Email dan WhatsApp sudah diisi sesuai PPT. Jika mengganti email, perbarui juga handler `copy-email` di script.js.
-- Tombol unduh mengambil PPT asli yang disertakan, bukan CV PDF.
+- Tombol Download CV mengunduh assets/CV_Moch_Zaim_Zidan_KN.pdf.
 
 ## Fitur
 
-Navigasi bagian, filter dua kategori karya, dialog detail proyek, pembesaran foto dan sertifikat, mode terang/gelap tersimpan pada browser, menu mobile, email/WhatsApp/telepon, salin email, dan unduh portofolio. Dialog bisa ditutup dengan tombol silang atau Escape. Dukungan reduced motion dan fokus keyboard tersedia.
+Navigasi bagian, filter dua kategori karya, dialog detail proyek, pembesaran foto dan sertifikat, mode terang/gelap tersimpan pada browser, menu mobile, email/WhatsApp/telepon, salin email, dan unduh CV PDF. Dialog bisa ditutup dengan tombol silang atau Escape. Dukungan reduced motion dan fokus keyboard tersedia.
 
 Dokumentasi dashboard adalah gambar dari PPT, bukan data langsung atau simulasi monitoring. Website belum dipublikasikan ke akun GitHub. Tidak ada formulir server; tombol kontak membuka aplikasi email atau WhatsApp.
 
 ## Pemeriksaan
 
 Sintaks JavaScript dan seluruh tautan aset lokal diperiksa. Filter, kedua dialog proyek, galeri bertingkat, dan pergantian tema diuji pada browser desktop. CSS memiliki breakpoint 1000px dan 700px; pengujian pada perangkat ponsel fisik belum dilakukan.
+
+
+## Animasi scroll
+Konten masuk dari kiri, kanan, dan bawah saat masuk layar; kartu muncul bertahap. Animasi dapat diputar ulang setelah konten keluar layar. Garis di atas halaman menunjukkan progres scroll. Preferensi reduced motion dihormati; tanpa JavaScript konten tetap terlihat.
